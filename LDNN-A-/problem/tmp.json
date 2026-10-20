@@ -1,0 +1,264 @@
+[
+  {
+    "Start Point" :  [5, 5],
+    "Goal Point" :  [20, 20],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" :   [39, 22],
+    "Goal Point" :  [3, 14],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" :  [48, 4],
+    "Goal Point" :  [44, 27],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" : [22, 12],
+    "Goal Point" :  [5, 5],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" : [5, 5],
+    "Goal Point" :  [27, 15],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+{
+    "Start Point" :  [9, 3],
+    "Goal Point" :  [47, 28],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" :  [20, 20],
+    "Goal Point" :  [47, 13],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" :  [20, 6],
+    "Goal Point" :  [40, 25],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+    "Start Point" :  [3, 27],
+    "Goal Point" :  [28, 8],
+    "Horizontal Barriers": [
+      [10, 0, 25],
+      [15, 30, 50]
+    ],
+    "Vertical Barriers": [[25, 10, 22]]
+  },
+  {
+
+    "Start Point" :  [45, 25],
+    "Goal Point" :  [5, 5],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" :  [5, 25],
+    "Goal Point" :  [45, 5],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" : [35, 24],
+    "Goal Point" :  [25, 3],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" : [35, 24],
+    "Goal Point" :  [25, 25],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" : [5, 25],
+    "Goal Point" :  [45, 25],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" : [5, 25],
+    "Goal Point" :  [45, 25],
+    "Horizontal Barriers": [[15, 10, 21]],
+    "Vertical Barriers": [
+      [20, 0, 15],
+      [30, 15, 30],
+      [40, 0, 16]
+    ]
+  },
+  {
+    "Start Point" : [2, 3],
+    "Goal Point" :  [18, 8],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" : [18, 8],
+    "Goal Point" :  [42, 4],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" : [6, 10],
+    "Goal Point" :  [2, 3],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+ {
+    "Start Point" : [18, 8],
+    "Goal Point" :  [2, 28],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+    {
+    "Start Point" : [2, 28],
+    "Goal Point" :  [40, 25],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+   {
+    "Start Point" :  [42, 4],
+    "Goal Point" :  [18, 8],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" :  [2, 28],
+    "Goal Point" :  [2, 3],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" :   [38, 3],
+    "Goal Point" :   [18, 8],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" :  [45, 25],
+    "Goal Point" :  [2, 3],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  },
+  {
+    "Start Point" :   [10, 29],
+    "Goal Point" :  [16, 14],
+    "Horizontal Barriers": [
+      [7, 0, 10],
+      [5, 30, 40]
+    ],
+    "Vertical Barriers": [
+      [14, 12, 30],
+      [40, 0, 11]
+    ]
+  }
+]
