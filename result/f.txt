@@ -1,0 +1,62 @@
+
+A* Direct:
+    point-count=25 pts		length=26.90
+    operation cost   = 106
+    storage cost     = 216
+
+    Waypoints: [[35, 24], [33, 14], [21, 18], [25, 25]]
+LDNN-A*:
+    length=33.97
+    operation cost        = 40
+    storage cost          = 63
+    Path: [[35, 24], [34, 23], [34, 22], [34, 21], [34, 20], [34, 19], [34, 18], [34, 17], [34, 16], [34, 15], [33, 14], [32, 15], [31, 15], [30, 14], [29, 15], [28, 16], [27, 17], [26, 17], [25, 17], [24, 17], [23, 17], [22, 17], [21, 18], [22, 19], [23, 20], [24, 21], [24, 22], [24, 23], [24, 24], [25, 25]]
+  vs Baseline:    operation 37.7%     storage 29.2%
+
+    Waypoints: [[35, 24], [35, 16], [29, 16], [29, 25], [25, 25]]
+LLM-A*:
+    length=29.24
+    operation cost = 46
+    storage cost   = 52
+   vs Baseline:   operation 43.4%   storage 24.1%
+
+    Waypoints: [[35, 24], [32, 27], [25, 25]]
+iLLM-A*:
+    length= 25.14
+    operation cost = 238
+    storage cost   = 310
+    vs Baseline:   operation 224.5%   storage 143.5%
+
+
+A* Direct:
+    length=23.49
+    operation cost   = 26
+    storage cost     = 70
+
+   Waypoints: [[10, 29], [10, 21], [12, 19], [16, 14]]
+LDNN-A*:
+    point-count=22 pts		length=23.49
+    operation cost        = 28
+    storage cost          = 44
+        vs Baseline:     operation 107.7%  storage 62.9%
+
+
+Waypoints: [[10, 29], [14, 7], [16, 12], [16, 14]]
+LLM-A*:
+    length=31.49
+    operation cost = 30
+    storage cost   = 64
+    Path: [[10, 29], [11, 28], [12, 27], [13, 26], [13, 25], [13, 24], [13, 23], [13, 22], [13, 21], [13, 20], [13, 19], [13, 18], [13, 17], [13, 16], [13, 15], [13, 14], [13, 13], [13, 12], [14, 11], [14, 10], [14, 9], [14, 8], [14, 7], [15, 8], [16, 9], [16, 10], [16, 11], [16, 12], [16, 13], [16, 14]]
+  vs Baseline:   operation 115.4%   storage 91.4%
+
+Waypoints: [[3, 3], [11, 3], [28, 3]]
+iLLM-A*:
+    length=27.48
+    operation cost = 38
+    storage cost   = 83
+    Path: [[10, 29], [11, 28], [12, 27], [13, 26], [13, 25], [13, 24], [13, 23], [13, 22], [13, 21], [13, 20], [13, 19], [13, 18], [13, 17], [13, 16], [13, 15], [13, 14], [13, 13], [13, 12], [14, 11], [14, 10], [14, 9], [14, 8], [14, 7], [15, 8], [16, 9], [16, 10], [16, 11], [16, 12], [16, 13], [16, 14]]
+  vs Baseline:   operation 146.2%   storage 118.6%
+
+
+
+
+
