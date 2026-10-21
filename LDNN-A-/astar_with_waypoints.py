@@ -141,7 +141,7 @@ def adaptive_params(env, start, goal):
     rho, D = map_features(env, start, goal)
     alpha = alpha0 * (D / D_REF)
     beta  = beta0 * (rho / RHO_REF)
-    alpha = max(1.0, min(2.0, alpha))
+    alpha = max(1.5, min(2.0, alpha))
     beta  = max(0.75, min(1.0, beta))
     return alpha, beta
 
