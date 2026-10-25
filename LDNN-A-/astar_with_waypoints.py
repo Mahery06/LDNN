@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 NEIGHBORS = [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (-1,1), (1,-1), (1,1)]
 
-PATH = "result/hybrid2.txt"
+PATH = "result/ablation_LSTM.txt"
 
 def _is_collision(chosen_point_x, chosen_point_y, former_point_x, former_point_y, env: dict) -> int:
     vertical_barriers = env.get("Vertical Barriers", [])
@@ -68,7 +68,7 @@ def astar(start, goal, env, grid_w=50, grid_h=30, open_recorder=None):
         return None, 0, 0
 
     def h(pos):
-        return (pos[0] - goal[0])**2+ (pos[1] - goal[1])**2
+        return math.sqrt((pos[0] - goal[0])**2+ (pos[1] - goal[1])**2)
 
     def in_bounds(x, y):
         return 0 <= x <= grid_w and 0 <= y <= grid_h
@@ -78,8 +78,6 @@ def astar(start, goal, env, grid_w=50, grid_h=30, open_recorder=None):
     came_from = {}
     g_score = {start: 0}
     closed = set()
-
-    pushed = 1
 
     while open_set:
         _,_,cur= heapq.heappop(open_set)
@@ -94,7 +92,7 @@ def astar(start, goal, env, grid_w=50, grid_h=30, open_recorder=None):
                 cur = came_from[cur]
                 path.append(list(cur))
             path.reverse()
-            storage_cost = pushed
+            storage_cost = len(g_score)
             return path, operation_cost, storage_cost
 
         for dx, dy in NEIGHBORS:
@@ -108,13 +106,12 @@ def astar(start, goal, env, grid_w=50, grid_h=30, open_recorder=None):
                 came_from[nb] = cur
                 g_score[nb] = gt
                 heapq.heappush(open_set, (gt + h(nb), gt,nb))
-                pushed += 1
                 if open_recorder is not None:
                     open_recorder.add(nb)
 
 
 
-    storage_cost = pushed
+    storage_cost = len(g_score)
     return None, operation_cost, storage_cost
 
 def map_features(env, start, goal):
@@ -145,107 +142,94 @@ def adaptive_params(env, start, goal):
     beta  = max(0.75, min(1.0, beta))
     return alpha, beta
 
-def llm_astar(start, goal, env, grid_w=50, grid_h=30, open_recorder=None):
+def llm_astar(start, goal, env, waypoints=None, grid_w=50, grid_h=30, open_recorder=None):
+
     start = tuple(start)
-    target = tuple(goal)
-    goal = tuple(env["Goal Point"])
+    goal = tuple(goal)
 
-    alpha, beta = adaptive_params(env, start , goal)
+    alpha,beta = adaptive_params(env, start, goal)
 
-    if on_barrier(target[0], target[1], env):
+    # 目标序列：中间 waypoints（去重、过滤越界/障碍、剔除首尾）+ goal
+    targets = []
+    if waypoints:
+        for wp in waypoints:
+            w = (int(wp[0]), int(wp[1]))
+            if w == start or w == goal:
+                continue
+            if not (0 <= w[0] <= grid_w and 0 <= w[1] <= grid_h):
+                continue
+            if on_barrier(w[0], w[1], env):
+                continue
+            if w not in targets:
+                targets.append(w)
+    targets.append(goal)
+
+    if on_barrier(goal[0], goal[1], env):
         return None, 0, 0
 
-    def h(pos):
-        return abs(pos[0] - goal[0]) + abs(pos[1] - goal[1]) + (math.sqrt(2)-2)*min(abs(pos[0] - goal[0]), abs(pos[1] - goal[1]))
+    t_idx = [0]  # 可变容器，让 h_target 里能推进当前目标
 
-    def cost_to_target(pos, target):
-        return abs(pos[0] - target[0]) + abs(pos[1] - target[1])
+    def h_goal(pos):
+        return abs(pos[0] - goal[0]) + abs(pos[1] - goal[1]) + (math.sqrt(2) - 2) * min(abs(pos[0] - goal[0]),abs(pos[1] - goal[1]))
+
+    def h_target(pos):
+        t = targets[t_idx[0]]
+        return abs(pos[0] - t[0]) + abs(pos[1] - t[1])
 
     def in_bounds(x, y):
         return 0 <= x <= grid_w and 0 <= y <= grid_h
 
     operation_cost = 0
-    open_set = [(alpha * h(start) + beta*cost_to_target(start, target), 0, start)]
+    open_set = [(alpha*h_goal(start) + beta*h_target(start), 0, start)]
     came_from = {}
     g_score = {start: 0}
     closed = set()
-
-    pushed = 1
 
     while open_set:
         _, _, cur = heapq.heappop(open_set)
         if cur in closed:
             continue
         closed.add(cur)
-        operation_cost += 1  # 由于每一次pop都会产生f-cost与neighbors的计算，operation cost只统计pop的次数
+        operation_cost += 1  # 每次 pop 都产生 f-cost 与 neighbors 计算，operation 只统计 pop 次数
 
-        if cur == target:
+        if cur == goal:
             path = [list(cur)]
             while cur in came_from:
                 cur = came_from[cur]
                 path.append(list(cur))
             path.reverse()
-            storage_cost = pushed
+            storage_cost = len(g_score)
             return path, operation_cost, storage_cost
 
         for dx, dy in NEIGHBORS:
             nx, ny = cur[0] + dx, cur[1] + dy
             nb = (nx, ny)
-            if not in_bounds(nx, ny) or nb in closed or on_barrier(nx, ny, env):
+            if not in_bounds(nx, ny):
                 continue
 
-            gt = g_score[cur] + abs(dx) + abs(dy)
+            # 到达当前 waypoint：切到下一个目标并重建堆（对应 repo 的 _update_target / _update_queue）
+            if targets[t_idx[0]] != goal and nb == targets[t_idx[0]]:
+                t_idx[0] += 1
+                rebuilt = []
+                while open_set:
+                    _, g, node = heapq.heappop(open_set)
+                    heapq.heappush(rebuilt, (g + alpha*h_goal(node) + beta*h_target(node), g, node))
+                open_set = rebuilt
+
+            if nb in closed or on_barrier(nx, ny, env):
+                continue
+
+            gt = g_score[cur] + abs(dx)+abs(dy)
             if nb not in g_score or gt < g_score[nb]:
                 came_from[nb] = cur
                 g_score[nb] = gt
-                heapq.heappush(open_set, (gt + alpha * h(nb) + beta*cost_to_target(nb, target), gt, nb))
-                pushed += 1
+                heapq.heappush(open_set, (gt + h_goal(nb) + h_target(nb), gt, nb))
                 if open_recorder is not None:
                     open_recorder.add(nb)
 
-    storage_cost = pushed
+    storage_cost = len(g_score)
     return None, operation_cost, storage_cost
 
-
-def astar_with_waypoints(waypoints,env):
-    full_path = []
-    operation_cost = 0
-    peak_storage = 0
-    seg_details = []
-
-    with open(PATH, "a", encoding="utf-8") as f:
-        for i in range(1, len(waypoints)):
-            sub_start = tuple(waypoints[i-1])
-            sub_goal = tuple(waypoints[i])
-
-            path, op_cost, st_cost = astar(sub_start, sub_goal, env)
-
-            if path is None:
-                print(f"  [FAIL], trying direct line...", file=f)
-                if not _is_collision(sub_goal[0], sub_goal[1],
-                                     sub_start[0], sub_start[1], env):
-                    path = [list(sub_start), list(sub_goal)]
-                    op_cost = 0
-                    st_cost = 2
-                    print(f"         direct line OK",file=f)
-                else:
-                    print(f"         direct line blocked, skip",file=f)
-                    seg_details.append((i, list(sub_start), list(sub_goal), "SKIP", 0, 0))
-                    continue
-
-            operation_cost += op_cost-1
-            if st_cost > peak_storage:
-                peak_storage = st_cost
-            seg_details.append((i, list(sub_start), list(sub_goal), "OK", op_cost, st_cost))
-
-            if full_path and path:
-                full_path.extend(path[1:])
-            else:
-                full_path = path
-
-    operation_cost+=1 # 最终目标点需要最终的f-cost计算
-
-    return full_path, operation_cost , peak_storage
 
 # ─── Main ──────────────────────────────────────────────────────────
 
@@ -299,7 +283,7 @@ def run(env,full_waypoints):
 
         # ── A* with waypoints ──
         print(f"LDNN-A*:",file=f)
-        wp_path, wp_op, wp_storage = astar_with_waypoints(full_waypoints, env)
+        wp_path, wp_op, wp_storage = llm_astar(start, goal, env, waypoints=full_waypoints)
 
         if wp_path:
             w_len = sum(math.sqrt((wp_path[i][0]-wp_path[i-1][0])**2 +
@@ -323,7 +307,7 @@ def run(env,full_waypoints):
         print(file=f)
 
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-HYBRID_TXT = os.path.join(_BASE_DIR, "result", "hybrid2.txt")
+HYBRID_TXT = os.path.join(_BASE_DIR, "result", "f_n.txt")
 ENV_JSON = os.path.join(_BASE_DIR, "problem", "2_标准格式.json")
 PLOT_DIR = os.path.join(_BASE_DIR, "result", "plots")
 
@@ -404,8 +388,7 @@ def plot_comparisons():
             print(f"[warn] no env for {start}->{goal}"); continue
         direct_open = set(); astar(start, goal, env, open_recorder=direct_open)
         wp_open = set()
-        for i in range(1, len(comp["waypoints"])):
-            llm_astar(tuple(comp["waypoints"][i-1]), tuple(comp["waypoints"][i]), env, open_recorder=wp_open)
+        llm_astar(start, goal, env, waypoints=comp["waypoints"], open_recorder=wp_open)
         fig, axes = plt.subplots(1, 2, figsize=(18, 8))
         _draw_scene(axes[0], env, comp["direct_path"], direct_open, comp["waypoints"],
                       "A* Direct", show_waypoints=False)
